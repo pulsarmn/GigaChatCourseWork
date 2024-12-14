@@ -98,3 +98,16 @@ async def user_info(callback: CallbackQuery):
 
     kb = None if is_premium else keyboards.buy_sub()
     await callback.message.answer(text=text, reply_markup=kb)
+
+
+@user_router.callback_query(F.data == 'sub')
+async def buy_sub(callback: CallbackQuery):
+    payment_id = str(uuid.uuid4())
+    await callback.message.answer_invoice(
+        title='Подписка на безлимитные запросы',
+        description='Подписка на безлимитные запросы',
+        payload=payment_id,
+        provider_token=config.payment_token,
+        currency='RUB',
+        prices=[LabeledPrice(label='Оплата услуг', amount=29990)])
+    await callback.message.answer(text='Номер карты для теста: 5555 5555 5555 5555')
