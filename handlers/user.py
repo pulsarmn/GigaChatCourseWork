@@ -61,3 +61,9 @@ async def start_menu(message: Message, state: FSMContext):
 async def code_random(callback: CallbackQuery, state: FSMContext):
     prompt_text = random.choice(list(prompts_text.keys()))
     await send_text(callback, state, theme_text=prompt_text)
+
+
+@user_router.callback_query(F.data == 'generate_code_on_query')
+async def ask_for_query(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Введите запрос:")
+    await state.set_state(UserStates.waiting_for_query)
