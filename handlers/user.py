@@ -40,3 +40,18 @@ async def send_text(callback_or_message, state: FSMContext, theme_text=None, is_
     await state.update_data(text_type=theme_text)
 
     await send_method(text=f"{template_text}{story}", reply_markup=keyboards.after_text())
+
+
+@user_router.message(CommandStart())
+@user_router.message(F.text == 'Главное меню')
+async def start_menu(message: Message, state: FSMContext):
+    await database.add_user(message.from_user.id)
+
+    user_data = await database.get_user_data(message.from_user.id)
+    is_premium = user_data[2]
+
+    await message.answer(
+        text=f'Привет, {message.from_user.first_name}! Я бот GigaChat, я могу генерировать код и объяснения к нему '
+             f'\nВыбери действие:',
+        reply_markup=keyboards.start_menu(is_premium=is_premium))
+    await state.clear()
