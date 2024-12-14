@@ -1,7 +1,7 @@
 import aiosqlite
 
 
-DB_PATH = "database.db"
+DB_PATH = "database/database.db"
 
 
 async def init_db():
