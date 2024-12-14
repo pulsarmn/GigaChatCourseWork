@@ -19,3 +19,9 @@ def start_menu(is_premium: bool = False):
 def after_text():
     kb = [[KeyboardButton(text='Главное меню')]]
     return ReplyKeyboardMarkup(keyboard=kb, one_time_keyboard=True)
+
+def buy_sub():
+    kb = InlineKeyboardBuilder()
+    kb.row(InlineKeyboardButton(text='Купить подписку', callback_data='sub'))
+    kb.row(InlineKeyboardButton(text='Помощь', url='https://telegra.ph/'))
+    return kb.as_markup()
