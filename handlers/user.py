@@ -8,7 +8,7 @@ from keyboards import keyboards
 from config_data.config import Config, load_config
 from database import database
 
-from GigaQueryFactory import create_random_text, generate_random_query
+from GigaQueryFactory import create_random_code, generate_random_query
 
 from aiogram.fsm.state import StatesGroup, State
 
@@ -34,7 +34,7 @@ async def send_text(callback_or_message, state: FSMContext, theme_text=None, is_
                           reply_markup=keyboards.buy_sub())
         return
 
-    story = create_random_text(theme_text, is_query)
+    story = create_random_code(theme_text, is_query)
     print(theme_text)
     await state.update_data(text_type=theme_text)
 
@@ -83,7 +83,7 @@ async def generate_code_from_query(message: Message, state: FSMContext):
         await state.clear()
         return
 
-    text = create_random_text(user_query, is_query=True)
+    text = create_random_code(user_query, is_query=True)
     await message.answer(f"Результат запроса:\n{text}", reply_markup=keyboards.after_text(), parse_mode="Markdown")
 
     await state.clear()

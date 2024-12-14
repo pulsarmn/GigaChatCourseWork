@@ -32,3 +32,26 @@ def generate_random_query():
     operation = random.choice(operations)
     language = random.choice(languages)
     return f"Напиши {task_type} {operation} на {language}."
+
+
+gigachat = GigaChat(
+    credentials=config.gigachat_token,
+    scope="GIGACHAT_API_PERS",
+    model="GigaChat",
+    verify_ssl_certs=False,
+    streaming=False,
+)
+
+
+def create_random_code(user_query: str = 'default', is_query=False):
+    def check_user_query(user_query):
+        if is_query:
+            return user_query
+        else:
+            return generate_random_query()
+
+    prompt = default_message + check_user_query(user_query)
+    messages = [SystemMessage(content=prompt)]
+
+    response = gigachat.invoke(messages)
+    return response.content
