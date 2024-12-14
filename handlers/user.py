@@ -67,3 +67,23 @@ async def code_random(callback: CallbackQuery, state: FSMContext):
 async def ask_for_query(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Введите запрос:")
     await state.set_state(UserStates.waiting_for_query)
+
+
+@user_router.message(UserStates.waiting_for_query)
+async def generate_code_from_query(message: Message, state: FSMContext):
+    user_query = message.text
+
+    try:
+        await database.process_user_query(message.from_user.id)
+    except Exception:
+        await message.answer(
+            text='У вас закончились бесплатные запросы! Для дальнейшего использования необходимо купить подписку!',
+            reply_markup=keyboards.buy_sub()
+        )
+        await state.clear()
+        return
+
+    story = create_random_text(user_query, is_query=True)
+    await message.answer(f"Результат запроса:\n{story}", reply_markup=keyboards.after_text())
+
+    await state.clear()
