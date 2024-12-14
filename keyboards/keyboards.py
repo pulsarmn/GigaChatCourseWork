@@ -16,3 +16,6 @@ def start_menu(is_premium: bool = False):
     return kb.as_markup()
 
 
+def after_text():
+    kb = [[KeyboardButton(text='Главное меню')]]
+    return ReplyKeyboardMarkup(keyboard=kb, one_time_keyboard=True)
