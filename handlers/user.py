@@ -1,5 +1,4 @@
 import uuid
-import random
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
@@ -9,7 +8,7 @@ from keyboards import keyboards
 from config_data.config import Config, load_config
 from database import database
 
-from GigaQueryEngine import create_random_text, prompts_text
+from GigaQueryFactory import create_random_text, generate_random_query
 
 from aiogram.fsm.state import StatesGroup, State
 
@@ -39,7 +38,8 @@ async def send_text(callback_or_message, state: FSMContext, theme_text=None, is_
     print(theme_text)
     await state.update_data(text_type=theme_text)
 
-    await send_method(text=f"{template_text}{story}", reply_markup=keyboards.after_text())
+    await send_method(text=f"{template_text}{story}", reply_markup=keyboards.after_text(), parse_mode="Markdown")
+    await state.clear()
 
 
 @user_router.message(CommandStart())
@@ -59,7 +59,7 @@ async def start_menu(message: Message, state: FSMContext):
 
 @user_router.callback_query(F.data == 'generate_random_code')
 async def code_random(callback: CallbackQuery, state: FSMContext):
-    prompt_text = random.choice(list(prompts_text.keys()))
+    prompt_text = generate_random_query()
     await send_text(callback, state, theme_text=prompt_text)
 
 
@@ -83,8 +83,8 @@ async def generate_code_from_query(message: Message, state: FSMContext):
         await state.clear()
         return
 
-    story = create_random_text(user_query, is_query=True)
-    await message.answer(f"Результат запроса:\n{story}", reply_markup=keyboards.after_text())
+    text = create_random_text(user_query, is_query=True)
+    await message.answer(f"Результат запроса:\n{text}", reply_markup=keyboards.after_text(), parse_mode="Markdown")
 
     await state.clear()
 
@@ -110,7 +110,7 @@ async def buy_sub(callback: CallbackQuery):
         provider_token=config.payment_token,
         currency='RUB',
         prices=[LabeledPrice(label='Оплата услуг', amount=29990)])
-    await callback.message.answer(text='Номер карты для теста: 5555 5555 5555 5555')
+    await callback.message.answer(text='Номер карты для теста: 4000 0000 0000 0408')
 
 
 @user_router.pre_checkout_query()
