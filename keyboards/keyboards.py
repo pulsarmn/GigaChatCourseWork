@@ -5,8 +5,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 def start_menu(is_premium: bool = False):
     kb = InlineKeyboardBuilder()
 
-    kb.row(InlineKeyboardButton(text='Сгенерировать код по запросу', callback_data='generate_text_on_query'),
-           InlineKeyboardButton(text='Сгенерировать случайный код', callback_data='generate_random_text'))
+    kb.row(InlineKeyboardButton(text='Сгенерировать код по запросу', callback_data='generate_code_on_query'),
+           InlineKeyboardButton(text='Сгенерировать случайный код', callback_data='generate_random_code'))
     kb.row(InlineKeyboardButton(text='Помощь', url='https://telegra.ph/'))
 
     if not is_premium:
