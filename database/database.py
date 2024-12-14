@@ -19,3 +19,9 @@ async def add_user(tg_id: int):
         await db.execute('''INSERT OR IGNORE INTO users (id) VALUES (?)''',
                          (tg_id,))
         await db.commit()
+
+async def get_user_data(tg_id: int):
+    async with aiosqlite.connect(DB_PATH) as db:
+        async with db.execute("SELECT * FROM users WHERE id = ?", (tg_id,)) as cursor:
+            row = await cursor.fetchone()
+            return row
