@@ -117,3 +117,10 @@ async def buy_sub(callback: CallbackQuery):
 async def process_pre_checkout_query(query: PreCheckoutQuery):
     print('pre_checkout')
     await query.bot.answer_pre_checkout_query(pre_checkout_query_id=query.id, ok=True)
+
+
+@user_router.message(F.successful_payment)
+async def success_payment_handler(message: Message):
+    await database.set_premium(message.from_user.id)
+    await message.answer(text='Спасибо за покупку подписки!\nПользуйтесь ботом без ограничений!')
+
