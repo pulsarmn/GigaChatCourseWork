@@ -87,3 +87,14 @@ async def generate_code_from_query(message: Message, state: FSMContext):
     await message.answer(f"Результат запроса:\n{story}", reply_markup=keyboards.after_text())
 
     await state.clear()
+
+
+@user_router.callback_query(F.data == 'personal_cabinet')
+async def user_info(callback: CallbackQuery):
+    user_info = await database.get_user_data(callback.from_user.id)
+    is_premium = bool(user_info[2])
+    text = f'Информация о пользователе:\nusername: @{callback.from_user.username}\nОсталось запросов: '
+    text += 'неограничено' if is_premium else f'{user_info[1]} из 20'
+
+    kb = None if is_premium else keyboards.buy_sub()
+    await callback.message.answer(text=text, reply_markup=kb)
