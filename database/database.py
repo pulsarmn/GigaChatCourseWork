@@ -25,3 +25,13 @@ async def get_user_data(tg_id: int):
         async with db.execute("SELECT * FROM users WHERE id = ?", (tg_id,)) as cursor:
             row = await cursor.fetchone()
             return row
+
+async def process_user_query(tg_id: int):
+    user_data = await get_user_data(tg_id)
+    if user_data[1] == 0 and user_data[2] == 0:
+        raise Exception('Не осталось запросов!!!')
+    elif user_data[2] == 0 or user_data[1] > 0:
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute('''UPDATE users SET queries_left = queries_left - 1 WHERE id = ?''',
+                             (tg_id,))
+            await db.commit()
