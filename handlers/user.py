@@ -55,3 +55,9 @@ async def start_menu(message: Message, state: FSMContext):
              f'\nВыбери действие:',
         reply_markup=keyboards.start_menu(is_premium=is_premium))
     await state.clear()
+
+
+@user_router.callback_query(F.data == 'generate_random_code')
+async def code_random(callback: CallbackQuery, state: FSMContext):
+    prompt_text = random.choice(list(prompts_text.keys()))
+    await send_text(callback, state, theme_text=prompt_text)
