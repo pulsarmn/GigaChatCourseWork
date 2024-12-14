@@ -27,3 +27,8 @@ operations = [
 
 languages = ["C", "C++", "Java", "Rust", "Go", "JavaScript", "Python"]
 
+def generate_random_query():
+    task_type = random.choice(task_types)
+    operation = random.choice(operations)
+    language = random.choice(languages)
+    return f"Напиши {task_type} {operation} на {language}."
