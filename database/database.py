@@ -1,5 +1,5 @@
 import aiosqlite
-import sqlite3
+
 
 DB_PATH = "database.db"
 
@@ -35,3 +35,9 @@ async def process_user_query(tg_id: int):
             await db.execute('''UPDATE users SET queries_left = queries_left - 1 WHERE id = ?''',
                              (tg_id,))
             await db.commit()
+
+async def set_premium(tg_id: int):
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute('''UPDATE users SET is_premium = 1 WHERE id = ?''',
+                         (tg_id,))
+        await db.commit()
